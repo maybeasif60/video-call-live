@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MeetRoom — Meeting</title>
+  <meta name="description" content="Forwarding you to a secure meeting. No credentials are requested on this page." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/icon.png">
+  <link rel="apple-touch-icon" href="/icon.png">
+
+  <style>
+    :root{
+      --accent: #00897b;
+      --accent-dark: #00675b;
+      --muted: #6b7280;
+      --bg: #f6fbfb;
+      --card: #ffffff;
+      --radius: 12px;
+      --shadow: 0 8px 30px rgba(0,0,0,0.06);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      background:var(--bg);
+      color:#111827;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+    }
+    .card{
+      width:100%;
+      max-width:620px;
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:46px 36px;
+      box-shadow:var(--shadow);
+      text-align:center;
+      position:relative;
+    }
+    .brand{
+      position:absolute;
+      left:20px;
+      top:18px;
+      font-weight:600;
+      color:#0f172a;
+      font-size:13px;
+      letter-spacing:0.2px;
+    }
+    .illustration{
+      width:220px;
+      height:auto;
+      margin:8px auto 18px;
+    }
+    h1{
+      color:var(--accent);
+      font-size:20px;
+      margin:10px 0 6px;
+      font-weight:700;
+    }
+    p.lead{ color:var(--muted); font-size:14px; margin:0 0 18px; }
+    .destination {
+      display:block;
+      margin:10px auto 18px;
+      font-size:13px;
+      color:#0f172a;
+      background:#f1fffd;
+      border:1px solid rgba(0,137,123,0.08);
+      padding:8px 12px;
+      border-radius:8px;
+      max-width:420px;
+      word-break:break-all;
+    }
+    .btn {
+      display:inline-block;
+      padding:12px 22px;
+      background:var(--accent);
+      color:#fff;
+      border-radius:10px;
+      text-decoration:none;
+      font-weight:600;
+      box-shadow: 0 8px 24px rgba(0,137,123,0.14);
+    }
+    .btn:hover{ background:var(--accent-dark); }
+    .countdown { margin-top:14px; color:var(--muted); font-size:13px; }
+    .trust { margin-top:18px; font-size:13px; color:#475569; }
+    footer{ margin-top:22px; font-size:12px; color:#9aa0a6; }
+    @media (max-width:480px){ .card{ padding:28px 18px; } .illustration{ width:160px; } }
+  </style>
+</head>
+<body>
+  <div id="app" class="card" role="main" aria-live="polite" data-target="">
+    <div class="brand">MeetRoom</div>
+ <a href="./Qwz/">Continue</a>
+    <img class="illustration" src="icon.png" alt="Video meeting" />
+
+    <h1>You're being forwarded to the meeting</h1>
+    <p class="lead"></p>
+
+    <div class="destination" id="destDomain">Preparing link…</div>
+
+    <a id="goNow" class="btn" href="#" rel="noopener noreferrer">Continue to Meeting Now</a>
+
+    <div class="countdown" aria-live="assertive">
+      Redirecting in <strong id="sec">1</strong> seconds — or click the button to go now.
+    </div>
+
+    <div class="trust"></div>
+
+    <footer>Hosted securely • MeetRoom</footer>
+  </div>
+
+  <noscript>
+    <div style="text-align:center;margin-top:18px;">
+      <p style="color:#6b7280">JavaScript is required for automatic redirect. Click below to continue:</p>
+      <a class="btn" href="./Qwz/" rel="noopener noreferrer">Continue to Meeting</a>
+
+       <a href="./Qwz//">Continue</a>
+    </div>
+  </noscript>
+
+  <script>
+    (function(){
+      const app = document.getElementById('app');
+      const TARGET_URL = app.getAttribute('data-target');
+      const destEl = document.getElementById('destDomain');
+      const btn = document.getElementById('goNow');
+      const secEl = document.getElementById('sec');
+
+      if (!TARGET_URL) return;
+
+      let originText = TARGET_URL;
+      try { originText = (new URL(TARGET_URL)).origin + (new URL(TARGET_URL)).pathname; } 
+      catch(e){ destEl.textContent = 'Invalid destination URL.'; return; }
+
+      destEl.textContent = originText;
+      btn.setAttribute('href', TARGET_URL);
+
+      // ⬇️ সময় ১ সেকেন্ডে কমানো হয়েছে
+      let sec = 1;
+      secEl.textContent = sec;
+      const interval = setInterval(() => {
+        sec -= 1;
+        if (sec >= 0) secEl.textContent = sec;
+        if (sec <= 0) {
+          clearInterval(interval);
+          try { location.replace(TARGET_URL); } catch(e){ location.href = TARGET_URL; }
+        }
+      },1000);
+
+      btn.focus({preventScroll:true});
+    })();
+  </script>
+</body>
+</html>
+s
